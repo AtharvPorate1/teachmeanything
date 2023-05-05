@@ -1,7 +1,7 @@
-from django import forms
-
-class userform(forms.ModelForm):
-
+from django.contrib.auth.forms import UserCreationForm
+from .models import User
+ 
+class SignUpForm(UserCreationForm):
     class Meta:
-        model = 'users.user'
-        fields = []
+        model = User
+        fields = ('email','grasp_power')
