@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.views.generic.detail import DetailView
-
+from .forms import ChangeGraspPowerForm
 from .forms import SignUpForm
-
+from .models import User
 
 class UserView(DetailView):
     template_name = 'profile.html'
@@ -27,3 +27,25 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
+
+
+
+def change_grasp_power_view(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request
+        form = ChangeGraspPowerForm(request.POST)
+        if form.is_valid():
+            # retrieve the user instance with the given email
+            email = form.cleaned_data['email']
+            user = User.objects.get(email=email)
+            # update the grasp_power attribute
+            user.grasp_power = form.cleaned_data['grasp_power']
+            # save the changes to the database
+            user.save()
+            # redirect to a success page
+            return redirect('success')
+    else:
+        # create a blank form
+        form = ChangeGraspPowerForm()
+    # render the template with the form
+    return render(request, 'change_grasp_power.html', {'form': form})
