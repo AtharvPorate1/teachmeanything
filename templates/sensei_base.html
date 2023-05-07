@@ -19,5 +19,16 @@
       {{ response|safe}}
     </div>
   {% endif %}
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(window).on('beforeunload', function() {
+            $.ajax({
+                url: '/record-page-visit/my-page/',
+                async: false,
+                success: function() {}
+            });
+        });
+    </script>
 </body>
 </html>
