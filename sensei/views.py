@@ -15,27 +15,77 @@ load_dotenv()
 api_key = os.getenv("OPENAI_KEY",None)
 openai.api_key = api_key
 
+def syllabus(actual_string):
+    substring = actual_string
+
+    topic_for_gpt= []
+    topic_names = []
+
+
+    x = substring.split('subtopic_name_start')
+    for i in x:
+        topic_for_gpt.append(i)
+    course_size = len(topic_for_gpt)
+
+
+    for i in range(1,course_size):
+        title = topic_for_gpt[i][0:x[i].index('\\n')]
+        topic_names.append(title)
+
+
+    syllabus = {'title':topic_names,'to_gpt': topic_for_gpt}
+    print(syllabus)
+
+    return syllabus
+
+
+def course_generator(prompt):
+    response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+            {"role": "user", "content": f"I want to learn everything about {prompt}, break down this topic into multiple subtopics, and generate a syllabus for me. I have an engineering background, so I can understand advanced concepts so include tem in the syllabus.don't use any other words other than the syllabus necessary,"}
+                     ],
+            temperature = 0.2
+)
+        #  wrap the syllabus in start_syllabus and end_syllabus tag. give result as a string
+
+    string_this = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                    {"role": "user", "content": f"context is {response},now make it a string like 'subtopic_name_start1. Introduction to Data Science\\n- Definition of Data Science\\n- Importance of Data Science\\n- Applications of Data Science\\nsubtopic_name_start2. Mathematics for Data Science\\n- Linear Algebra\\n- Calculus\\n- Probability and Statistics\\nsubtopic_name_start3. Programming for Data Science\\n- Python Programming\\n- R Programming\\n- SQL\\nsubtopic_name_start4. Data Preparation\\n- Data Cleaning\\n- Data Transformation\\n- Data Integration\\nsubtopic_name_start5. Data Exploration and Visualization\\n- Exploratory Data Analysis\\n- Data Visualization Techniques\\n- Data Storytelling\\nsubtopic_name_start6. Machine Learning\\n- Supervised Learning\\n- Unsupervised Learning\\n- Reinforcement Learning\\nsubtopic_name_start7. Deep Learning\\n- Neural Networks\\n- Convolutional Neural Networks\\n- Recurrent Neural Networks\\nsubtopic_name_start8. Big Data\\n- Hadoop\\n- Spark\\n- NoSQL Databases\\nsubtopic_name_start9. Data Ethics and Privacy\\n- Ethical Considerations in Data Science\\n- Privacy Concerns in Data Science\\n- Legal and Regulatory Frameworks\\nsubtopic_name_start10. Capstone Project\\n- Applying Data Science Techniques to a Real-world Problem\\n- Project Planning and Execution\\n- Presentation and Communication Skills'"}
+                     ],
+            temperature = 0.1
+
+        )
+    chatbot_response = response['choices'][0]['message']['content']
+    actual_string = string_this['choices'][0]['message']['content']
+    print(actual_string)
+    portion = syllabus(actual_string)
+    
+    return portion
+
+
+
+
 
 def sensei(request):
     sensei_response = None
-    chatbot_response = None  # initialize chatbot_response with a default value
+    portion = None
+    title_list = None
+    prompt = None
+    
 
     if api_key is not None and request.method == 'POST':
 
         user_input = request.POST.get('user_input')
         prompt = user_input
 
-        response = openai.ChatCompletion.create(
-  model="gpt-3.5-turbo",
-  messages=[
-  {"role": "user", "content": f"I want to learn everything about {prompt}, break down this topic into multiple subtopics, then teach sub-topics one by one in about 1000 words using examples and anecdotes.Ask me questions and MCQs to test my understanding, Identify my mistake and give me feedback. always remember you have to teach me each subtopic in 1000 words.and total length of the response should be 5000 words"}
-]
-)
-        print(response)
+        portion = course_generator(prompt)
+        
+        title_list = portion['title']
 
-        chatbot_response = response['choices'][0]['message']['content']
-       
-    return render(request,'sensei_base.html',{'response': chatbot_response})
+        
+    return render(request,'sensei_base.html',{'response': portion,'title_list': title_list, 'prompt': prompt})
 
 
 def record_page_visit(request, page_name):
