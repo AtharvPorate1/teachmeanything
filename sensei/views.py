@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 import openai, os
 from dotenv import load_dotenv
 from django.utils import timezone
@@ -8,12 +8,18 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from .models import UserPageVisit
+import json
+from django.http import JsonResponse
 
 load_dotenv()
 # Create your views here.
 
 api_key = os.getenv("OPENAI_KEY",None)
 openai.api_key = api_key
+
+entire_course=[]
+SYLLABUS_LIST=[]
+
 
 def syllabus(actual_string):
     substring = actual_string
@@ -26,14 +32,19 @@ def syllabus(actual_string):
     for i in x:
         topic_for_gpt.append(i)
     course_size = len(topic_for_gpt)
-
-
+    k = ''
     for i in range(1,course_size):
-        title = topic_for_gpt[i][0:x[i].index('\\n')]
+        if '''\\n''' in topic_for_gpt[i]:
+            k = '\\n' 
+        else:
+            k = '''\n'''
+    for i in range(1,course_size):
+        title = topic_for_gpt[i][0:x[i].index(k)]
         topic_names.append(title)
 
 
     syllabus = {'title':topic_names,'to_gpt': topic_for_gpt}
+    SYLLABUS_LIST = syllabus['to_gpt']
     print(syllabus)
 
     return syllabus
@@ -73,9 +84,13 @@ def sensei(request):
     portion = None
     title_list = None
     prompt = None
+   
+    # if request.POST['action'] == 'understood':
+    #     print("the user has understood")
     
 
-    if api_key is not None and request.method == 'POST':
+    if api_key is not None and request.POST.get('form_type') == 'prompt_from_user':
+        
 
         user_input = request.POST.get('user_input')
         prompt = user_input
@@ -83,9 +98,12 @@ def sensei(request):
         portion = course_generator(prompt)
         
         title_list = portion['title']
+        
+    if request.POST.get('form_type') == 'Start Course':
+        return redirect('/sensei/classroom/',title_list)    
 
         
-    return render(request,'sensei_base.html',{'response': portion,'title_list': title_list, 'prompt': prompt})
+    return render(request,'sensei_controls.html',{'response': portion,'title_list': title_list, 'prompt': prompt})
 
 
 def record_page_visit(request, page_name):
@@ -122,3 +140,27 @@ def save_time_spent(request):
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'error'})
+    
+
+def my_view(request):
+    response = None
+    if request.POST.get('form_type') == 'test':
+        print("working properly")
+    if api_key is not None and request.method == 'POST':
+            # do something to get the next page or data
+            # for example, fetch the next set of items from the database
+            topic = 1
+            response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                    {"role": "user", "content": f"teach me about {SYLLABUS_LIST[topic]}"}
+                     ],
+            temperature = 0.1
+
+        )
+            response = response['choices'][0]['message']['content']
+            topic += 1
+            
+            return render(request, 'sensei_classroom.html', {'response': response})
+    return render(request,'sensei_classroom.html',{'response':response})
+  

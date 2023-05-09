@@ -1,0 +1,18 @@
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" name="upvote" value="Upvote" />
+</form>
+
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="test">
+    <input type="submit" name="upvote" value="test" />
+</form>
+  <div>
+    {% if response %}
+        {{response}}
+    {% endif %}
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
