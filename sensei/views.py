@@ -44,7 +44,7 @@ def syllabus(actual_string):
 
 
     syllabus = {'title':topic_names,'to_gpt': topic_for_gpt}
-    SYLLABUS_LIST = syllabus['to_gpt']
+    
     print(syllabus)
 
     return syllabus
@@ -98,7 +98,9 @@ def sensei(request):
         portion = course_generator(prompt)
         
         title_list = portion['title']
+        gpt_list=portion['to_gpt']
         
+        request.session['my_list'] = gpt_list
     if request.POST.get('form_type') == 'Start Course':
         return redirect('/sensei/classroom/',title_list)    
 
@@ -140,27 +142,31 @@ def save_time_spent(request):
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'error'})
-    
+
+def doubt(context):
+    pass
 
 def my_view(request):
     response = None
+    topic = request.session.get('topic', 1)
+    my_list = request.session.get('my_list', None)
     if request.POST.get('form_type') == 'test':
         print("working properly")
-    if api_key is not None and request.method == 'POST':
+    if api_key is not None and request.POST.get('form_type') == 'next':
             # do something to get the next page or data
             # for example, fetch the next set of items from the database
-            topic = 1
+            
             response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                    {"role": "user", "content": f"teach me about {SYLLABUS_LIST[topic]}"}
+                    {"role": "user", "content": f"teach me about {my_list[topic]}"}
                      ],
             temperature = 0.1
 
         )
             response = response['choices'][0]['message']['content']
             topic += 1
-            
+            request.session['topic'] = topic
             return render(request, 'sensei_classroom.html', {'response': response})
     return render(request,'sensei_classroom.html',{'response':response})
   

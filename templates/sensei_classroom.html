@@ -1,6 +1,7 @@
 <form action="" method="post">
     {% csrf_token %}
-    <input type="submit" name="upvote" value="Upvote" />
+    <input type="hidden" name="form_type" value="next">
+    <input type="submit" name="upvote" value="Next" />
 </form>
 
 <form action="" method="post">
