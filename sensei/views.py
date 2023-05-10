@@ -45,7 +45,7 @@ def syllabus(actual_string):
 
     syllabus = {'title':topic_names,'to_gpt': topic_for_gpt}
     
-    print(syllabus)
+    # print(syllabus)
 
     return syllabus
 
@@ -70,9 +70,9 @@ def course_generator(prompt):
         )
     chatbot_response = response['choices'][0]['message']['content']
     actual_string = string_this['choices'][0]['message']['content']
-    print(actual_string)
-    portion = syllabus(actual_string)
     
+    portion = syllabus(actual_string)
+    # print(portion)
     return portion
 
 
@@ -99,9 +99,15 @@ def sensei(request):
         
         title_list = portion['title']
         gpt_list=portion['to_gpt']
-        
         request.session['my_list'] = gpt_list
+        request.session['topic_list'] = title_list
+        
+        
+        
     if request.POST.get('form_type') == 'Start Course':
+        request.session['topic'] = 1
+        
+        
         return redirect('/sensei/classroom/',title_list)    
 
         
@@ -148,25 +154,37 @@ def doubt(context):
 
 def my_view(request):
     response = None
-    topic = request.session.get('topic', 1)
-    my_list = request.session.get('my_list', None)
+    
+
+
     if request.POST.get('form_type') == 'test':
         print("working properly")
+
+
     if api_key is not None and request.POST.get('form_type') == 'next':
             # do something to get the next page or data
             # for example, fetch the next set of items from the database
-            
+            topic = request.session['topic']
+            my_list = request.session.get('my_list', None)
+            topic_list = request.session.get('topic_list', None)
+            topic_name = topic_list[topic - 1]
+            print(my_list)
             response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                    {"role": "user", "content": f"teach me about {my_list[topic]}"}
+                    {"role": "user", "content": f"teach me on the topic {my_list[topic]}"}
                      ],
             temperature = 0.1
 
         )
             response = response['choices'][0]['message']['content']
             topic += 1
+            if len(my_list)<topic:
+                return render(request,'sensei_completed.html')
+            else:
+                pass
+            
             request.session['topic'] = topic
-            return render(request, 'sensei_classroom.html', {'response': response})
+            return render(request, 'sensei_classroom.html', {'response': response,'topic_name':topic_name})
     return render(request,'sensei_classroom.html',{'response':response})
   

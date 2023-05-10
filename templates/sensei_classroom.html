@@ -9,6 +9,13 @@
     <input type="hidden" name="form_type" value="test">
     <input type="submit" name="upvote" value="test" />
 </form>
+    <div>
+        {% if topic_name %}
+        <h2>
+            {{topic_name}}
+        </h2>
+        {% endif %}
+    </div>
   <div>
     {% if response %}
         {{response}}
