@@ -21,6 +21,24 @@
         {{response}}
     {% endif %}
   </div>
+<div>
+    {% if context_for_doubt %}
+        {{context_for_doubt}}
+    {% endif %}
+</div>
+  <div>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="doubt">
+        <input type="text" name="user_doubt" value="doubt" />
+    </form>
+  </div>
+
+  <div>
+    {% if solution %}
+        {{solution}}
+    {% endif %}
+  </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

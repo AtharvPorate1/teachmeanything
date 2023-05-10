@@ -149,8 +149,16 @@ def save_time_spent(request):
     else:
         return JsonResponse({'status': 'error'})
 
-def doubt(context):
-    pass
+def doubt(question, context):
+    response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                    {"role": "user", "content": f"Context is {context}, and my doubt is {question}, please explain."}
+                     ],
+            temperature = 0.1
+
+        )
+    return response
 
 def my_view(request):
     response = None
@@ -159,7 +167,7 @@ def my_view(request):
 
     if request.POST.get('form_type') == 'test':
         print("working properly")
-
+    
 
     if api_key is not None and request.POST.get('form_type') == 'next':
             # do something to get the next page or data
@@ -168,7 +176,7 @@ def my_view(request):
             my_list = request.session.get('my_list', None)
             topic_list = request.session.get('topic_list', None)
             topic_name = topic_list[topic - 1]
-            print(my_list)
+            
             response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -177,14 +185,25 @@ def my_view(request):
             temperature = 0.1
 
         )
+            
             response = response['choices'][0]['message']['content']
             topic += 1
+            request.session['context_for_doubt'] = response
             if len(my_list)<topic:
                 return render(request,'sensei_completed.html')
             else:
                 pass
             
+            
             request.session['topic'] = topic
             return render(request, 'sensei_classroom.html', {'response': response,'topic_name':topic_name})
-    return render(request,'sensei_classroom.html',{'response':response})
+    
+
+    if request.POST.get('form_type') == 'doubt':
+        user_doubt = request.POST.get('user_doubt')
+        context_for_doubt = request.session['context_for_doubt']
+        
+        solution = doubt(user_doubt,context_for_doubt)
+        solution = solution['choices'][0]['message']['content']
+    return render(request,'sensei_classroom.html',{'response':response,'solution':solution,'context_for_doubt':context_for_doubt})
   
