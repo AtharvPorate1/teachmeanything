@@ -7,9 +7,24 @@ from .models import User
 
 class UserView(DetailView):
     template_name = 'profile.html'
-
+    
     def get_object(self):
         return self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['user_data'] = {
+            'email': user.email,
+            'name': user.name,
+            'grasp_power': user.grasp_power,
+            'comprehension': user.comprehension,
+            'engagement': user.engagement,
+            'learning_speed': user.learning_speed,
+            'curiosity': user.curiosity,
+            'confidence': user.confidence,
+        }
+        return context
 
 
 def signup(request):
@@ -27,6 +42,7 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
+
 
 
 

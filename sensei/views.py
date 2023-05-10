@@ -162,7 +162,8 @@ def doubt(question, context):
 
 def my_view(request):
     response = None
-    
+    solution = None
+    context_for_doubt = None
 
 
     if request.POST.get('form_type') == 'test':
@@ -172,6 +173,9 @@ def my_view(request):
     if api_key is not None and request.POST.get('form_type') == 'next':
             # do something to get the next page or data
             # for example, fetch the next set of items from the database
+            if request.user.is_authenticated:  # Ensure the user is authenticated
+                request.user.curiosity -= 1
+                request.user.save()
             topic = request.session['topic']
             my_list = request.session.get('my_list', None)
             topic_list = request.session.get('topic_list', None)

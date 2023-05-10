@@ -1,6 +1,60 @@
+<!-- semantic UI -->
+<link rel="stylesheet" type='text/css' href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.css">
+<!--Chart js-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+<!-- jQuery -->
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
 <h1>My profile</h1>
 <p>
   {{ object }}
 </p>
-<a href="{% url 'users:logout' %}">Logout</a>
+<div>
+  <script>
+  $(document).ready(function(){
+    const ctx = document.getElementById('myChart');
+
+new Chart(ctx, {
+  type: 'radar',
+  data: {
+    labels: ['grasp_power','comprehension','engagement','learning_speed','curiosity','confidence'],
+    datasets: [{
+      label: 'Your Learning Score',
+      data: [{{user_data.grasp_power}}, {{user_data.comprehension}},{{user_data.engagement}},{{user_data.learning_speed}},{{user_data.curiosity}},{{user_data.confidence}}],
+      borderWidth: 1,
+      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      borderColor: 'rgb(255, 99, 132)',
+      pointBackgroundColor: 'rgb(255, 99, 132)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgb(255, 99, 132)',
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+});
+  </script>
+<div>
+  <div>
+    <canvas id="myChart" width="400" height="100"></canvas>
+  </div>
+</div>
+</div>
+
+
+
+
+
+
+<div>
+  <a href="{% url 'users:logout' %}">Logout</a>
+</div>
