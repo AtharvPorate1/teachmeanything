@@ -78,7 +78,7 @@ def course_generator(prompt):
 
 
 
-
+@login_required
 def sensei(request):
     sensei_response = None
     portion = None
