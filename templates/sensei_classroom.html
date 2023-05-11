@@ -18,7 +18,11 @@
     </div>
   <div>
     {% if response %}
-        {{response}}
+        {% for i in answer %}
+            <p>
+                {{i}}
+            </p>
+        {% endfor %}
     {% endif %}
   </div>
 <div>

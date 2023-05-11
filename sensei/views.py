@@ -184,13 +184,18 @@ def my_view(request):
             response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                    {"role": "user", "content": f"teach me on the topic {my_list[topic]}"}
+                    {"role": "user", "content": f"teach me on the topic {my_list[topic]},whenever there is a line break use ---br---, consider : as line breaks too"}
                      ],
             temperature = 0.1
 
         )
             
             response = response['choices'][0]['message']['content']
+            list = response.split('---br---')
+
+            answer = []
+            for i in list:
+                answer.append(i)
             topic += 1
             request.session['context_for_doubt'] = response
             if len(my_list)<topic:
@@ -200,7 +205,7 @@ def my_view(request):
             
             
             request.session['topic'] = topic
-            return render(request, 'sensei_classroom.html', {'response': response,'topic_name':topic_name})
+            return render(request, 'sensei_classroom.html', {'response': response,'topic_name':topic_name,'answer':answer})
     
 
     if request.POST.get('form_type') == 'doubt':
