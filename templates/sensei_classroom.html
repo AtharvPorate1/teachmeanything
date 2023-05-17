@@ -17,12 +17,25 @@
         {% endif %}
     </div>
   <div>
+
+    <span id="myElement"></span>
+
+    <!-- The script itself, loaded AFTER your root element. -->
+    <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
+    <script>
+      new TypeIt("#myElement", {
+        strings: `{{answer}}`,
+      }).go();
+    </script>
+
+</body>
     {% if response %}
         {% for i in answer %}
             <p>
                 {{i}}
             </p>
         {% endfor %}
+        
     {% endif %}
   </div>
 <div>

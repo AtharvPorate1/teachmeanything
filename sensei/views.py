@@ -17,8 +17,6 @@ load_dotenv()
 api_key = os.getenv("OPENAI_KEY",None)
 openai.api_key = api_key
 
-entire_course=[]
-SYLLABUS_LIST=[]
 
 
 def syllabus(actual_string):
@@ -78,7 +76,7 @@ def course_generator(prompt):
 
 
 
-@login_required
+
 def sensei(request):
     sensei_response = None
     portion = None
@@ -184,7 +182,7 @@ def my_view(request):
             response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                    {"role": "user", "content": f"teach me on the topic {my_list[topic]},whenever there is a line break use ---br---, consider : as line breaks too"}
+                    {"role": "user", "content": f"teach me on the topic {my_list[topic]},whenever there is a line break use ---br---"}
                      ],
             temperature = 0.1
 
@@ -192,20 +190,27 @@ def my_view(request):
             
             response = response['choices'][0]['message']['content']
             list = response.split('---br---')
+            text = list
+            line = ''
 
+            for i in text:
+                line += (f"^1000\\n`{i}`")
+                
+            print(line)
             answer = []
             for i in list:
                 answer.append(i)
+            
             topic += 1
             request.session['context_for_doubt'] = response
             if len(my_list)<topic:
-                return render(request,'sensei_completed.html')
+                return redirect('sensei_completed.html')
             else:
                 pass
             
             
             request.session['topic'] = topic
-            return render(request, 'sensei_classroom.html', {'response': response,'topic_name':topic_name,'answer':answer})
+            return render(request, 'sensei_classroom.html', {'response': response,'topic_name':topic_name,'answer':answer,'line':line})
     
 
     if request.POST.get('form_type') == 'doubt':
