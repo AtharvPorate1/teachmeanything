@@ -4,6 +4,8 @@ from django.views.generic.detail import DetailView
 from .forms import ChangeGraspPowerForm
 from .forms import SignUpForm
 from .models import User
+from django.views import decorators
+
 
 class UserView(DetailView):
     template_name = 'profile.html'
@@ -38,7 +40,7 @@ def signup(request):
                 login(request, user)
             else:
                 print("user is not authenticated")
-            return redirect('users:profile')
+            return redirect('')
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})

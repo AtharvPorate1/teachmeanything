@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from .models import UserPageVisit
 import json
 from django.http import JsonResponse
+import json
 
 load_dotenv()
 # Create your views here.
@@ -196,11 +197,13 @@ def my_view(request):
             for i in text:
                 line += (f"^1000\\n`{i}`")
                 
-            print(line)
+            # print(line)
             answer = []
             for i in list:
                 answer.append(i)
-            
+                answer.append('\n')
+            js_answer = answer.copy()
+            mylist = json.dumps(js_answer)
             topic += 1
             request.session['context_for_doubt'] = response
             if len(my_list)<topic:
@@ -210,7 +213,7 @@ def my_view(request):
             
             
             request.session['topic'] = topic
-            return render(request, 'sensei_classroom.html', {'response': response,'topic_name':topic_name,'answer':answer,'line':line})
+            return render(request, 'sensei_classroom.html', {'response': response,'topic_name':topic_name,'answer':answer,'line':line,'mylist':mylist})
     
 
     if request.POST.get('form_type') == 'doubt':

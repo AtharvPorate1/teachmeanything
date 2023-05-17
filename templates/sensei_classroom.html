@@ -23,8 +23,10 @@
     <!-- The script itself, loaded AFTER your root element. -->
     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
     <script>
+      // var mylist = JSON.parse({{mylist}})
       new TypeIt("#myElement", {
-        strings: `{{answer}}`,
+        strings: {{mylist|safe}},
+        speed: 30,
       }).go();
     </script>
 

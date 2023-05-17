@@ -1,12 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'landing_page.css' %}">
     <title>Document</title>
 </head>
 <body>
-    <h1>This is a landing page</h1>
+    <div class="content">
+        <h2>WELCOME TO</h2>
+        <h1 class="title">TeachMeAnything.AI
+          <div class="aurora">
+            <div class="aurora__item"></div>
+            <div class="aurora__item"></div>
+            <div class="aurora__item"></div>
+            <div class="aurora__item"></div>
+          </div>
+        </h1>
+        <!-- <p class="subtitle">Get Started</p> -->
+        <a href="{% url 'users:profile'%}">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Get Started
+        </a>
+    
+      </div>
 </body>
 </html>
