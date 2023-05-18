@@ -25,6 +25,7 @@ class UserView(DetailView):
             'learning_speed': user.learning_speed,
             'curiosity': user.curiosity,
             'confidence': user.confidence,
+            'background': user.background,
         }
         return context
 

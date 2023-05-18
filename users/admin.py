@@ -9,7 +9,7 @@ from .models import User
 # Register your models here.
 class UserAdmin(BaseUserAdmin):
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'name','grasp_power','comprehension','engagement','learning_speed','curiosity','confidence', 'last_login')}),
+        (None, {'fields': ('email', 'password', 'name','grasp_power','comprehension','engagement','learning_speed','curiosity','confidence','background', 'last_login')}),
         ('Permissions', {'fields': (
             'is_active', 
             'is_staff', 
@@ -28,7 +28,7 @@ class UserAdmin(BaseUserAdmin):
         ),
     )
 
-    list_display = ('email', 'name','grasp_power','comprehension','engagement','learning_speed','curiosity','confidence', 'is_staff', 'last_login')
+    list_display = ('email', 'name','grasp_power','comprehension','engagement','learning_speed','curiosity','confidence', 'is_staff','background', 'last_login')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
     search_fields = ('email',)
     ordering = ('email',)

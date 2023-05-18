@@ -5,7 +5,7 @@ from django import forms
 class SignUpForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('email','grasp_power','comprehension','engagement','learning_speed','curiosity','confidence')
+        fields = ('email','grasp_power','comprehension','engagement','learning_speed','curiosity','confidence','background')
         
 
 
