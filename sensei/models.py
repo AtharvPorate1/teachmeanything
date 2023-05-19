@@ -12,3 +12,5 @@ class PageVisit(models.Model):
 class UserPageVisit(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     page_visits = models.ManyToManyField(PageVisit)
+
+
