@@ -1,0 +1,59 @@
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="next">
+    <input type="submit" name="upvote" value="Next" />
+</form>
+
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="test">
+    <input type="submit" name="upvote" value="test" />
+</form>
+    <div>
+        {% if topic_name %}
+        <h2>
+            {{topic_name}}
+        </h2>
+        {% endif %}
+    </div>
+  <div>
+
+    <span id="myElement"></span>
+
+    <!-- The script itself, loaded AFTER your root element. -->
+    <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
+    <script>
+      // var mylist = JSON.parse({{mylist}})
+      new TypeIt("#myElement", {
+        strings: {{mylist|safe}},
+        speed: 30,
+      }).go();
+    </script>
+
+</body>
+    {% if response %}
+        {% for i in answer %}
+            <p>
+                {{i}}
+            </p>
+        {% endfor %}
+        
+    {% endif %}
+  </div>
+<div>
+    {% if context_for_doubt %}
+        {{context_for_doubt}}
+    {% endif %}
+</div>
+  <div>
+
+  </div>
+
+  <div>
+    {% if solution %}
+        {{solution}}
+    {% endif %}
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+

@@ -49,12 +49,12 @@ def syllabus(actual_string):
     return syllabus
 
 
-def course_generator(prompt):
+def course_generator(request, prompt):
     
     response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-            {"role": "user", "content": f"I want to learn everything about {prompt}, break down this topic into multiple subtopics, and generate a syllabus for me. I have an engineering background, so I can understand advanced concepts so include tem in the syllabus.don't use any other words other than the syllabus necessary,"}
+            {"role": "user", "content": f"I want to learn everything about {prompt}, break down this topic into multiple subtopics, and generate a syllabus for me. I have an {request.user.background} background, so I can understand advanced concepts so include tem in the syllabus.don't use any other words other than the syllabus necessary,"}
                      ],
             temperature = 0.2
 )
@@ -95,7 +95,7 @@ def sensei(request):
         user_input = request.POST.get('user_input')
         prompt = user_input
 
-        portion = course_generator(prompt)
+        portion = course_generator(request,prompt)
         
         title_list = portion['title']
         gpt_list=portion['to_gpt']
@@ -160,6 +160,30 @@ def doubt(question, context):
         )
     return response
 
+def simplify(context):
+    
+    response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                    {"role": "user", "content": f"Context is {context}, simplify it please."}
+                     ],
+            temperature = 0.1
+
+        )
+    return response
+
+def example(context):
+    response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                    {"role": "user", "content": f"Context is {context}, give me two examples so i would understand, one should be a general example, other should be a real world example"}
+                     ],
+            temperature = 0.1
+
+        )
+    return response
+
+
 def my_view(request):
     response = None
     solution = None
@@ -175,6 +199,9 @@ def my_view(request):
             # for example, fetch the next set of items from the database
             if request.user.is_authenticated:  # Ensure the user is authenticated
                 request.user.curiosity -= 1
+                request.user.engagement -= 1
+                request.user.comprehension += 1
+                request.user.grasp_power += 1
                 request.user.save()
             topic = request.session['topic']
             my_list = request.session.get('my_list', None)
@@ -184,7 +211,8 @@ def my_view(request):
             response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                    {"role": "user", "content": f"teach me on the topic {my_list[topic]},whenever there is a line break use ---br---"}
+                    {"role": "system", "content": f"The AI chatbot tutor is called TMA. Its goal is to personalize the learning experience of its users. Equipped with a vast knowledge base, TMA Chat adapts to each individual's unique needs and preferences to help them achieve their academic goals. The chatbot offers guidance and resources tailored to the user's learning style, whether it's specific subject help or improving overall study skills. The chatbot proposes starting with the user providing a topic of interest, It does this in only one line. it will then summarize the topic in a 500-word text that follows a textbook format but with a conversational tone.  Based on the above lines, pretend that you are TMA now. TMA stands for TeachMeAnything. You will roleplay as TMA from now. After this text from me, every response to you will be from the user. don't tell the user what writing style you have been told to follow. the user's score learning pattern will be based on these 6 parameters grasp_power, comprehension, confidence, engagement, learning_speed, and curiosity, which will be scored out of 100, a score close to 100 means, the user is perfect and is greatest in that parameter and the score close to 0 means, the user is weak, now this user's scores are {request.user.grasp_power},{request.user.comprehension},{request.user.confidence},{request.user.engagement},{request.user.learning_speed},{request.user.curiosity}  respectively and the user has a background in {request.user.background}."},
+                    {"role": "user", "content": f"teach me on the topic {my_list[topic]} in about 1000 words,whenever there is a line break use ---br---"}
                      ],
             temperature = 0.1
 
@@ -208,7 +236,7 @@ def my_view(request):
             topic += 1
             request.session['context_for_doubt'] = response
             if len(my_list)<topic:
-                return redirect('sensei_completed.html')
+                return redirect('/sensei/completed')
             else:
                 pass
             
@@ -216,12 +244,45 @@ def my_view(request):
             request.session['topic'] = topic
             return render(request, 'sensei_classroom.html', {'response': response,'topic_name':topic_name,'answer':answer,'line':line,'mylist':mylist})
     
+    if request.POST.get('form_type') == 'Simplify':
+        if request.user.is_authenticated:  # Ensure the user is authenticated
+                request.user.comprehension -= 1
+                request.user.engagement += 2
+                request.user.save()
+
+        context_for_simplification = request.session['context_for_doubt']
+
+        solution = simplify(context_for_simplification)
+        solution = solution['choices'][0]['message']['content']
+
+    if request.POST.get('form_type') == 'Give Examples':
+        if request.user.is_authenticated:  # Ensure the user is authenticated
+                request.user.grasp_power -= 1
+                request.user.engagement += 2
+                request.user.save()
+        context_for_example = request.session['context_for_doubt']
+
+        solution = example(context_for_example)
+        solution = solution['choices'][0]['message']['content']
 
     if request.POST.get('form_type') == 'doubt':
+        if request.user.is_authenticated:  # Ensure the user is authenticated
+                request.user.curiosity += 2
+                request.user.engagement += 2
+                request.user.comprehension -= 1
+                request.user.save()
         user_doubt = request.POST.get('user_doubt')
         context_for_doubt = request.session['context_for_doubt']
         
         solution = doubt(user_doubt,context_for_doubt)
         solution = solution['choices'][0]['message']['content']
+        
     return render(request,'sensei_classroom.html',{'response':response,'solution':solution,'context_for_doubt':context_for_doubt})
-  
+
+    
+
+
+        
+
+def success(request):
+    return render(request ,'sensei_completed.html')

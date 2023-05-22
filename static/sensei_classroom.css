@@ -1,0 +1,253 @@
+body {
+    background-color: #000000;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    justify-content: center;
+  }
+  
+  .blackboard {
+    width: 60%;
+    height: 70vh;
+    background-color: #000;
+    border: 2px solid #333;
+    border-radius: 10px;
+    /* padding: 20px; */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* margin-bottom: 20px; */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .blackboard::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background-color: #000;
+    border: 2px solid #333;
+    border-radius: 5px;
+    z-index: -1;
+  }
+  
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .buttons span {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .buttons button {
+    margin: 5px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .blackboard {
+    background-color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+    width: 60%;
+    /* padding: 10px; */
+    color: white;
+    overflow: hidden;
+    text-align: center;
+  }
+  
+  .info-scrollable{
+    max-height: 70vh;
+    overflow: auto;
+  }
+  
+  h3 {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .buttons {
+    margin-top: 10px;
+  }
+  
+  .buttons button {
+    margin-right: 10px;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .blackboard {
+    background-color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+    width: 70%;
+    /* padding: 10px; */
+    color: white;
+    overflow: hidden;
+    text-align: center;
+  }
+  
+  .info-scrollable{
+    max-height: 60vh;
+    overflow: auto;
+    border: 2px solid white; /* Add border to the info box */
+    border-radius: 5px; /* Optional: Add border radius */
+    padding: 5px; /* Optional: Add padding */
+  }
+  
+  h1 {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .buttons {
+    margin-top: 10px;
+  }
+  
+  .buttons button {
+    margin-right: 10px;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+
+  
+  .info-scrollable{
+    max-height: 60vh;
+    overflow: auto;
+    border: 2px solid white;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
+  h3 {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .buttons {
+    margin-top: 10px;
+  }
+  
+  .buttons button {
+    margin-right: 10px;
+  }
+  
+  #doubtContainer {
+    display: flex;
+    align-items: center;
+  }
+  
+  #doubtInput {
+    padding: 5px;
+    border: 2px solid white;
+    border-radius: 5px;
+    margin-right: 10px;
+    flex-grow: 1;
+    background-color: black;
+    color: white;
+  }
+  
+  #searchButton {
+    padding: 5px 10px;
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+  }
+  
+  
+.additional-sections {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .additional-section {
+    width: 60%;
+    background-color: black;
+    border: 2px solid white;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    color: white;
+  }
+  
+  .additional-section-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+  }
+  
+  button {
+    padding: 5px 10px;
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+
+  input{
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  }
+  .doubt-section{
+    background-color: antiquewhite;
+  }
+  .solution-doubt{
+    width: 70%;
+    color: wheat;
+  }
+  body{
+    font-family: Arial, Helvetica, sans-serif;
+  }

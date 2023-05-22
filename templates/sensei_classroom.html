@@ -1,36 +1,28 @@
-<form action="" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="form_type" value="next">
-    <input type="submit" name="upvote" value="Next" />
-</form>
+{% load static %}
 
-<form action="" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="form_type" value="test">
-    <input type="submit" name="upvote" value="test" />
-</form>
-    <div>
-        {% if topic_name %}
-        <h2>
-            {{topic_name}}
-        </h2>
+<link rel="stylesheet" type="text/css" href="{% static 'sensei_classroom.css' %}">
+
+<body>
+  <div class="container">
+    <div class="blackboard">
+
+    {% if topic_name %}
+
+      <h3>{{topic_name}}</h3>
+    {% else %}
+    <h3>Click Understood to Continue</h3>
+    {% endif %}
+
+
+
+      <div class="info-scrollable">
+        
+         {% if context_for_doubt %}
+                {{context_for_doubt}}
+         
+
         {% endif %}
-    </div>
-  <div>
-
-    <span id="myElement"></span>
-
-    <!-- The script itself, loaded AFTER your root element. -->
-    <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
-    <script>
-      // var mylist = JSON.parse({{mylist}})
-      new TypeIt("#myElement", {
-        strings: {{mylist|safe}},
-        speed: 30,
-      }).go();
-    </script>
-
-</body>
+        
     {% if response %}
         {% for i in answer %}
             <p>
@@ -38,26 +30,44 @@
             </p>
         {% endfor %}
         
-    {% endif %}
-  </div>
-<div>
-    {% if context_for_doubt %}
-        {{context_for_doubt}}
+    {% endif %}      </div>
+    </div>
+    <div class="buttons">
+      <span>
+        <button><form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="Simplify">
+            <input type="submit" name="simply" value="Simplify" />
+        </form></button>
+        <button><form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="next">
+            <input type="submit" name="upvote" value="Understood" />
+        </form></button>
+        
+        <button><form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="Give Examples">
+            <input type="submit" name="upvote" value="Give Examples" />
+        </form></button>
+      </span>
+      <div class="doubt-section">
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="doubt">
+            <input type="text" name="user_doubt" value="doubt" />
+        </form>
+      </div>
+      <div class="solution-doubt">
+      {% if solution %}
+    <div class="info-scrollable">
+        {{solution}}
+    </div>
     {% endif %}
 </div>
-  <div>
-    <form action="" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="doubt">
-        <input type="text" name="user_doubt" value="doubt" />
-    </form>
+      
+    </div>
   </div>
 
-  <div>
-    {% if solution %}
-        {{solution}}
-    {% endif %}
-  </div>
-
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
 
