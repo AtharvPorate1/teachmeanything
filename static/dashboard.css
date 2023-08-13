@@ -3,14 +3,14 @@
   box-sizing: border-box;
 }
 :root {
-  --app-bg-dark: #black;
+  --app-bg-dark: #212129;
   --app-bg-before: linear-gradient(180deg, rgba(1, 8, 31, 0) 0%, #01081f 100%);
   --app-bg-before-2: linear-gradient(0deg, rgba(1, 8, 31, 0) 0%, #01081f 100%);
   --app-bg-light: #151c32;
   --app-logo: #3d7eff;
   --nav-link: #5e6a81;
   --nav-link-active: #fff;
-  --list-item-hover: #000000;
+  --list-item-hover:#212129;
   --main-color: #fff;
   --secondary-color: #5e6a81;
   --color-light: rgba(52, 129, 210, 0.2);
@@ -31,7 +31,7 @@ body {
   display: flex;
   justify-content: center;
   font-family: 'Poppins', sans-serif;
-  background-color: #000000;
+  background-color: #212129;
 }
 .app-container {
   width: 100%;
@@ -60,7 +60,7 @@ body {
   overflow-x: hidden;
   background-color: var(--app-bg-light);
   padding: 24px;
-  background: radial-gradient(circle, black 1%, black 100%);
+  background: radial-gradient(circle, #212129 1%,#12121e 100%);
 }
 .app-right {
   flex-basis: 320px;
